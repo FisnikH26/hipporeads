@@ -5,6 +5,7 @@ import { todayDate } from "../assets/data/todaydate";
 import { v4 as commentId } from "uuid";
 import { Button, Col, Image, Row } from "react-bootstrap";
 import default_image from "../assets/images/OIG1.jpg"
+import Comment from "../components/Comment";
 const BookDetails = () => {
   const { id } = useParams();
   const {
@@ -39,8 +40,6 @@ const BookDetails = () => {
       book: book.id,
       userId: loggedIn.id,
       commentText: commentText,
-      name: loggedIn.name,
-      profile_image: userProfile.profile_image,
       created_at: todayDate(),
     };
 
@@ -57,7 +56,7 @@ const BookDetails = () => {
       setComments(
         bookComments.filter(
           (bookComment) =>
-            bookComment.book == book.id && bookComment.userId == loggedIn.id
+            bookComment.book == book.id 
         )
       );
     }
@@ -66,44 +65,47 @@ const BookDetails = () => {
   return (
     <>
       {book && (
-        <div>
+        <div className="pt-3 pb-5">
           <Row>
             <Col lg={3}>
               <Image src={book.cover} width="100%" />
               <div className="d-flex gap-1 mt-3">
-                <Button className="read-btn main-color-text" variant="" onClick={() => addBookToShelf("read", book)}>
+                <Button className="read-btn text-white" variant="" onClick={() => addBookToShelf("read", book)}>
                   Read
                 </Button>
-                <Button className="reading-btn main-color-text" variant="" onClick={() => addBookToShelf("reading", book)}>
+                <Button className="reading-btn text-white" variant="" onClick={() => addBookToShelf("reading", book)}>
                   Reading
                 </Button>
-                <Button className="wanttoread-btn main-color-text" variant="" onClick={() => addBookToShelf("want to read", book)}>
+                <Button className="wanttoread-btn text-white" variant="" onClick={() => addBookToShelf("want to read", book)}>
                   Want to read
                 </Button>
               </div>
             </Col>
             <Col lg={9}>
-              <h3>{book.name}</h3>
-              {book.author.map((author) => (
-                <h5 key={author}>{author}</h5>
-              ))}
+              <h3 className="secondary-color-text">{book.name}</h3>
+              {book.author.map((author) =>{ 
+                if(book.author.length > 1){
+                  return <span className=" fs-5 fw-semibold secondary-color-text" key={author}>{author},</span>
+                }
+                return <span className=" fs-5 fw-semibold secondary-color-text" key={author}>{author}</span>
+              
+              
+              })}
 
               <div>
                 <ul className="nav flex-column">
                   <li>
-                    <span className="fw-semibold fs-5 secondary-color-bg text-white rounded px-1 me-2">
+                    <span className="fw-semibold fs-5 secondary-color-bg main-color-text rounded px-1 me-2">
                       Isbn:
                     </span>
-                    <span className="fw-semibold secondary-color-text">{book.isbn}</span>
+                    <span className="fw-semibold secondary-color-text">{book.isbn ? book.isbn : <i>Not available</i> }</span>
                   </li>
                   <li>
                     <span className="fw-semibold fs-5 secondary-color-bg main-color-text rounded px-1 me-2">
                       Genre:
                     </span>
                     {book.genre.map((genre) => (
-                      <span key={genre} className="fw-semibold secondary-color-text">
-                        {book.genre}
-                      </span>
+                      <span key={genre} className="fw-semibold secondary-color-text">{genre}, </span>
                     ))}
                   </li>
                   <li>
@@ -126,12 +128,13 @@ const BookDetails = () => {
                   </li>
                   <li>
                     <span className="fw-semibold fs-5 secondary-color-bg main-color-text rounded px-1 me-2">
-                      Description:
+                      Description: 
                     </span>
+                    <i className="fa-solid fa-turn-down secondary-color-text"></i>
                     <br />
                     {book.description.includes("\n") ? (
                       book.description.split("\n").map((des) => {
-                        <p className="fw-semibold secondary-color-text">{des}</p>;
+                        return <p className="fw-semibold secondary-color-text">{des}</p>;
                       })
                     ) : (
                       <p className="fw-semibold secondary-color-text">{book.description}</p>
@@ -149,7 +152,7 @@ const BookDetails = () => {
             </div>
             <div className="writeAComment pt-3">
               <textarea
-                className="w-100"
+                className="w-100 main-color-bg rounded secondary-color-text secondary-color-border border-2 ps-2"
                 style={{ resize: "none" }}
                 placeholder="Write a comment"
                 rows={3}
@@ -165,23 +168,7 @@ const BookDetails = () => {
               {comments.length !== 0 &&
                 comments.map((comment) => {
                   return (
-                    <div className="comment d-flex gap-3">
-                      <div>
-                        <Image
-                          src={comment.profile_image ? comment.profile_image  : default_image}
-                          width={80}
-                          height={80}
-                          className="rounded-circle"
-                        />
-                      </div>
-                      <div>
-                        <div className="d-flex gap-3">
-                          <h5 className="secondary-color-text">{comment.name}</h5>
-                          <span className="main-lighter-text">2/2/2024</span>
-                        </div>
-                        <div className="secondary-color-text">{comment.commentText}</div>
-                      </div>
-                    </div>
+                    <Comment comment={comment}/>
                   );
                 }).reverse()}
             </div>

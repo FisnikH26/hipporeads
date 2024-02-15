@@ -3,27 +3,28 @@ import User from "./User";
 import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 import { Image, Row } from "react-bootstrap";
 import default_photo from "../assets/images/OIG1.jpg";
+import { Link } from "react-router-dom";
 const Sidebar = () => {
   const [userSuggestion, setUserSuggestion] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBookResult, setSearchBookResult] = useState([]);
   const [searchUserResult, setSearchUserResult] = useState([]);
-  const { users, loggedIn, DoIFollowThisUser, url_books, profile, setLoading } =
-    useContext(HippoReadsContext);
+  const {
+    users,
+    books,
+    loggedIn,
+    DoIFollowThisUser,
+    url_books,
+    profile,
+    setLoading,
+  } = useContext(HippoReadsContext);
 
   const searchBook = async () => {
-    setLoading(true);
-    await fetch(url_books + `?name=${searchTerm}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data == "Not found") {
-          setSearchBookResult([]);
-        } else {
-          setSearchBookResult(data);
-        }
-        setLoading(false);
-      });
-
+    setSearchBookResult(
+      books.filter((book) =>
+        book.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
     setSearchUserResult(
       users.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,38 +60,49 @@ const Sidebar = () => {
             <div>
               <small className="fw-bold">BOOKS</small>
               {searchBookResult.slice(0, 4).map((book) => (
-                <div className="d-flex align-items-center gap-1 mb-1">
-                  <Image src={book.cover} width={40} height={50} />
-                  <h6>
-                    {book.name.length >= 20
-                      ? book.name.slice(0, 20) + "..."
-                      : book.name}
-                  </h6>
-                </div>
+                <Link
+                  to={`/book/${book.id}`}
+                  className="text-decoration-none secondary-color-text"
+                >
+                  <div className="d-flex align-items-center gap-1 mb-1">
+                    <Image src={book.cover} width={40} height={50} />
+                    <h6>
+                      {book.name.length >= 20
+                        ? book.name.slice(0, 20) + "..."
+                        : book.name}
+                    </h6>
+                  </div>
+                </Link>
               ))}
             </div>
             <div>
               <small className="fw-bold">USERS</small>
               {searchUserResult.slice(0, 4).map((user) => {
-                let userP = profile.find((up) => up.userId == user.id);
+                let userP = profile.find((up) => up.userId == user.id );
                 return (
-                  <div className="d-flex align-items-center gap-1 mb-1">
-                    <Image
-                      src={
-                        userP.profile_image
-                          ? userP.profile_image
-                          : default_photo
-                      }
-                      width={40}
-                      height={40}
-                      className="rounded-circle"
-                    />
-                    <h6>
-                      {user.name.length >= 20
-                        ? user.name.slice(0, 20) + "..."
-                        : user.name}
-                    </h6>
-                  </div>
+                  <Link
+                  to={`/profile/${user.name.split(" ").join("-")}`}
+                  className="text-decoration-none secondary-color-text"
+
+                  >
+                    <div className="d-flex align-items-center gap-1 mb-1">
+                      <Image
+                        src={
+                          userP.profile_image
+                            ? userP.profile_image
+                            : default_photo
+                        }
+                        width={40}
+                        height={40}
+                        className="rounded-circle"
+                      />
+                      <h6>
+                        {user.name.length >= 20
+                          ? user.name.slice(0, 20) + "..."
+                          : user.name}
+                      </h6>
+                    </div>
+                  </Link>
                 );
               })}
             </div>
@@ -99,10 +111,10 @@ const Sidebar = () => {
       </div>
       <div>
         <small className="fw-semibold">Suggestion for you</small>
-        {userSuggestion.length ? ( 
-            userSuggestion
-              .slice(0, 3)
-              .map((user_s) => <User key={user_s.id} user={user_s} />) 
+        {userSuggestion.length ? (
+          userSuggestion
+            .slice(0, 3)
+            .map((user_s) => <User key={user_s.id} user={user_s} />)
         ) : (
           <b className="d-block text-center">No Suggestions</b>
         )}
