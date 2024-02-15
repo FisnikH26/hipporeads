@@ -8,12 +8,17 @@ import no_books from "../assets/images/no-education.png";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("read");
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(); 
+  const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
+  const [editProfileDialog, setEditProfileDialog] = useState(false);
 
   const { name } = useParams();
   const {
     users,
+    setUsers,
     profile,
+    setProfile,
     userFollowers,
     booksRead,
     setBooksRead,
@@ -23,6 +28,7 @@ const Profile = () => {
     setBooksToBeRead,
     DoIFollowThisUser,
     loggedIn,
+    setLoggedIn,
     followUser,
     unFollowUser,
   } = useContext(HippoReadsContext);
@@ -61,7 +67,11 @@ const Profile = () => {
 
   const btnType = () => {
     if (name.split("-").join(" ") == loggedIn.name) {
-      return <Button variant="dark">Edit Profile</Button>;
+      return (
+        <Button variant="dark" onClick={() => setEditProfileDialog(true)}>
+          Edit Profile
+        </Button>
+      );
     }
     if (DoIFollowThisUser(user) == undefined) {
       return (
@@ -108,15 +118,108 @@ const Profile = () => {
       return;
     }
   };
+  const changeUserName = (userId, newName,newBio) => { 
+    if(newName !== null){
+      setUsers(users.map(user => 
+        user.id === userId ? { ...user, name: newName } : user
+      ));
+      setLoggedIn({...loggedIn,name:newName})
+      window.location.replace(`http://localhost:3000/profile/${newName.split(" ").join("-")}`)
+    }
+    if(newBio !== null){
+      setProfile(profile.map(user => 
+        user.userId === userId ? { ...user, biography: newBio } : user
+      ));
+      setEditProfileDialog(false)
+    } 
+    
+  };
+  
+  const editProfileSubmit = (e)=>{
+    e.preventDefault();
+    if(user.name !== username){
+      changeUserName(user.id,username,null)
+    }
+    if(user.biography !== bio){
+      changeUserName(user.id,null,bio)
+
+  }
+   
+    if (user.name !== username && user.biography !== bio) {
+      console.log({username, bio});
+    }
+ 
+
+  }
+
+
+
 
   useEffect(() => {
-    getProfileData();
-  }, [name, booksRead,booksReading,booksToBeRead]);
+    setTimeout(() => {
+      getProfileData();
+    }, 500);
+  }, [name, booksRead, booksReading, booksToBeRead]);
+  
+  useEffect(() => {
+    if(editProfileDialog){
+      setUsername(user.name)
+      setBio(user.biography)
+    }
+  }, [editProfileDialog]);
+
+
+
+
 
   return (
     <div className="w-75 py-3 ps-5">
       {user && (
         <>
+          {editProfileDialog && (
+            <div
+              className="position-absolute editProfile_backdrop d-flex align-items-center justify-content-center bg-black bg-opacity-75 w-100 h-100"
+              style={{ top: 0, left: 0, zIndex: 20 }}
+            >
+              <div className="editProfile_modal glass rounded p-3" style={{ width: "25%" }}>
+                <h3 className="text-center text-white">Edit Profile</h3>
+                <form onSubmit={editProfileSubmit}>
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      placeholder="Name"
+                      value={username}
+                      onChange={(e)=>setUsername(e.target.value)}
+                    />
+                    <label htmlFor="name">Name</label>
+                  </div>
+                  <div className="form-floating mt-2">
+                    <textarea
+                      id="bio"
+                      className="form-control"
+                      placeholder="Bio"
+                      style={{ resize: "none" }}
+                      value={bio}
+                      onChange={(e)=>setBio(e.target.value)}
+                    ></textarea>
+                    <label htmlFor="bio">Biography</label>
+                  </div>
+                  <div className="d-flex gap-3 mt-5">
+                    <input
+                      type="submit"
+                      className={`btn btn-primary text-white w-50 form-control border-0 ${username == user.name && bio == user.biography ?" disabled":"" }`}
+                      
+                    />
+                    <Button variant="danger" className="w-50" onClick={()=>setEditProfileDialog(!editProfileDialog)}>
+                      Close
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
           <div>
             <div className="d-flex align-items-center gap-3 w-75 justify-content-between">
               <Image
@@ -136,7 +239,7 @@ const Profile = () => {
               </div>
               {btnType()}
             </div>
-            <div className="mt-3 mb-5 secondary-color-text">No bio yet</div>
+            <div className="mt-3 mb-5 secondary-color-text">{user.biography}</div>
           </div>
           <div>
             <div className="tabs d-flex">
@@ -169,14 +272,16 @@ const Profile = () => {
                     {user.bookRead.map((book) => (
                       <Col lg={3} key={book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        <Button
-                          variant="danger"
-                          className="btn-sm rounded-0 rounded-start position-absolute"
-                          onClick={() => removeBookFromShelf("read", book)}
-                          style={{ top: "15px", right: "12px" }}
-                        >
-                          X
-                        </Button>
+                        {name.split("-").join(" ") == loggedIn.name && (
+                          <Button
+                            variant="danger"
+                            className="btn-sm rounded-0 rounded-start position-absolute"
+                            onClick={() => removeBookFromShelf("read", book)}
+                            style={{ top: "15px", right: "12px" }}
+                          >
+                            X
+                          </Button>
+                        )}
                       </Col>
                     ))}
                   </Row>
@@ -197,14 +302,16 @@ const Profile = () => {
                     {user.bookReading.map((book) => (
                       <Col lg={3} key={book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        <Button
-                          variant="danger"
-                          className="btn-sm rounded-0 rounded-start position-absolute"
-                          onClick={() => removeBookFromShelf("reading", book)}
-                          style={{ top: "15px", right: "12px" }}
-                        >
-                          X
-                        </Button>
+                        {name.split("-").join(" ") == loggedIn.name && (
+                          <Button
+                            variant="danger"
+                            className="btn-sm rounded-0 rounded-start position-absolute"
+                            onClick={() => removeBookFromShelf("reading", book)}
+                            style={{ top: "15px", right: "12px" }}
+                          >
+                            X
+                          </Button>
+                        )}
                       </Col>
                     ))}
                   </Row>
@@ -225,14 +332,18 @@ const Profile = () => {
                     {user.booksToBeRead.map((book) => (
                       <Col lg={3} key={book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        <Button
-                          variant="danger"
-                          className="btn-sm rounded-0 rounded-start position-absolute"
-                          onClick={() => removeBookFromShelf("want to read", book)}
-                          style={{ top: "15px", right: "12px" }}
-                        >
-                          X
-                        </Button>
+                        {name.split("-").join(" ") == loggedIn.name && (
+                          <Button
+                            variant="danger"
+                            className="btn-sm rounded-0 rounded-start position-absolute"
+                            onClick={() =>
+                              removeBookFromShelf("want to read", book)
+                            }
+                            style={{ top: "15px", right: "12px" }}
+                          >
+                            X
+                          </Button>
+                        )}
                       </Col>
                     ))}
                   </Row>

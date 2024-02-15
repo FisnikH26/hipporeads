@@ -186,3 +186,14 @@ body,
   aspect-ratio: 1/1;
   border-radius: 50%;
 }
+
+.editProfile_backdrop{
+  background-image: url('./assets/images/layered-waves.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+
+}
+.glass{
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
