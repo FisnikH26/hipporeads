@@ -119,28 +119,7 @@ const Profile = () => {
       return;
     }
   };
-  const changeUserName = (userId, newName, newBio ) => {
-    if (newName !== null) {
-      setUsers(
-        users.map((user) =>
-          user.id === userId ? { ...user, name: newName } : user
-        )
-      );
-      setLoggedIn({ ...loggedIn, name: newName });
-      window.location.replace(
-        `http://localhost:3000/profile/${newName.split(" ").join("-")}`
-      );
-    }
-    if (newBio !== null) {
-      setProfile(
-        profile.map((user) =>
-          user.userId === userId ? { ...user, biography: newBio } : user
-        )
-      );
-    
-      setEditProfileDialog(false);
-    }
-  };
+  
 
   const getNewImage = (event) => {
     let file = event.target.files[0];
@@ -153,19 +132,22 @@ const Profile = () => {
 
   const editProfileSubmit = (e) => {
     e.preventDefault();
-    if (user.name !== username) {
-      changeUserName(user.id, username, null);
+    
+    if (user.biography !== bio && user.profile_image !== profileImage) {
+      setProfile(profile.map((userP) => userP.userId === loggedIn.id ? { ...userP, biography: bio , profile_image: profileImage } : userP ));
+    }else if(user.profile_image !== profileImage){
+      setProfile(profile.map((userPi) => userPi.userId === loggedIn.id ? { ...userPi, profile_image: profileImage } : userPi ));
+    }else if (user.biography !== bio ) {
+      setProfile(profile.map((userP) => userP.userId === loggedIn.id ? { ...userP, biography: bio } : userP ));
     }
-    if (user.biography !== bio) {
-      changeUserName(user.id, null, bio);
+    if(user.name !== username && username !== "") {
+      setUsers(users.map((user) => user.id === loggedIn.id ? { ...user, name: username } : user ));
+      setLoggedIn({ ...loggedIn, name: username });
+      window.location.replace(
+        `http://localhost:3000/profile/${username.split(" ").join("-")}`
+      );
     }
-    if(user.profile_image !== profileImage){
-      setProfile(
-          profile.map((user) =>
-            user.userId === loggedIn.id ? { ...user, profile_image: profileImage } : user
-          )
-        );
-    }
+
 
     setEditProfileDialog(false);
 
