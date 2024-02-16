@@ -24,7 +24,7 @@ useEffect(()=>{
         "Loading"
       ) : (
         <Row className="">
-          <h3 className="secondary-color-text">Top Movies</h3>
+          <h3 className="secondary-color-text">Top Books</h3>
           {topBooks &&
             topBooks 
               .slice(0, 4)
