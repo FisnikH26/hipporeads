@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { HippoReadsContext } from "./assets/context/HippoReadsContext";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -15,6 +15,25 @@ import logo from "./assets/images/hippo.png";
 function App() {
   const { loggedIn, setLoggedIn, theme, setTheme } =
     useContext(HippoReadsContext);
+  const [lineWidth, setLineWidth] = useState(0);
+  const [lineHeight, setLineHeight] = useState(0);
+  const [lineOffset, setLineOffset] = useState(0);
+  const [lineOffsetTop, setLineOffsetTop] = useState(0);
+
+  const moveBorderBottom = (nameTab) => {
+    setLineWidth(document.getElementById(nameTab).offsetWidth);
+    setLineHeight(document.getElementById(nameTab).offsetHeight);
+    setLineOffset(document.getElementById(nameTab).offsetLeft);
+    setLineOffsetTop(document.getElementById(nameTab).offsetTop);
+  };
+  const handleMouseLeave = () => {
+    setLineWidth(document.querySelector(".theme-btn.active").offsetWidth);
+    setLineOffset(document.querySelector(".theme-btn.active").offsetLeft);
+    setLineHeight(document.querySelector(".theme-btn.active").offsetHeight);
+    setLineOffsetTop(document.querySelector(".theme-btn.active").offsetTop);
+
+  };
+
   return (
     <BrowserRouter>
       {loggedIn == undefined ? (
@@ -27,7 +46,10 @@ function App() {
       ) : (
         <div className={`App ${theme}`}>
           <Row className="mx-0 mh100">
-            <Col lg={2} className="mh100 pt-3 border-end secondary-color-border ">
+            <Col
+              lg={2}
+              className="mh100 pt-3 border-end secondary-color-border "
+            >
               <header className="App-header mb-5">
                 <Link
                   to="/"
@@ -75,37 +97,62 @@ function App() {
                 </Button>
                 <div className="mt-3">
                   <p className=" mb-0 secondary-color-text">Themes:</p>
-                  <Button
-                    className={`btn-sm theme-btn ${
-                      theme == "light" ? "active" : ""
-                    }`}
-                    variant=""
-                    onClick={() => setTheme("light")}
-                  >
-                    Light
-                  </Button>
-                  <Button
-                    className={`btn-sm theme-btn ${
-                      theme == "dark" ? "active" : ""
-                    }`}
-                    variant=""
-                    onClick={() => setTheme("dark")}
-                  >
-                    Dark
-                  </Button>
-                  <Button
-                    className={`btn-sm theme-btn ${
-                      theme == "sepia" ? "active" : ""
-                    }`}
-                    variant=""
-                    onClick={() => setTheme("sepia")}
-                  >
-                    Sepia
-                  </Button>
+                  <div className="position-relative secondary-color-bg rounded-pill d-flex">
+                    <Button
+                      id="light"
+                      className={`btn-sm theme-btn ${
+                        theme == "light" ? "active" : ""
+                      }`}
+                      variant=""
+                      style={{flex:1}}
+                      onClick={() => setTheme("light")}
+                      onMouseEnter={() => moveBorderBottom("light")}
+                      onMouseLeave={() => handleMouseLeave()}
+                    >
+                      Light
+                    </Button>
+                    <Button
+                      id="dark"
+                      className={`btn-sm theme-btn ${
+                        theme == "dark" ? "active" : ""
+                      }`}
+                      variant=""
+                      style={{flex:1}}
+                      onClick={() => setTheme("dark")}
+                      onMouseEnter={() => moveBorderBottom("dark")}
+                      onMouseLeave={() => handleMouseLeave()}
+                    >
+                      Dark
+                    </Button>
+                    <Button
+                      id="sepia"
+                      className={`btn-sm theme-btn ${
+                        theme == "sepia" ? "active" : ""
+                      }`}
+                      variant=""
+                      style={{flex:1}}
+                      onClick={() => setTheme("sepia")}
+                      onMouseEnter={() => moveBorderBottom("sepia")}
+                      onMouseLeave={() => handleMouseLeave()}
+                    >
+                      Sepia
+                    </Button>
+                    <span
+                      style={{
+                        bottom: 0,
+                        height: lineHeight,
+                        width: lineWidth,
+                        left: lineOffset,
+                        top: lineOffsetTop,
+                        transition: "all 200ms linear",
+                      }}
+                      className="rounded-pill secondary-color-border border main-color-bg position-absolute"
+                    ></span>
+                  </div>
                 </div>
               </aside>
             </Col>
-            <Col lg={10} >
+            <Col lg={10}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/explore" element={<Explore />} />

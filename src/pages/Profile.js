@@ -119,7 +119,7 @@ const Profile = () => {
       return;
     }
   };
-  const changeUserName = (userId, newName, newBio , newProfileImage) => {
+  const changeUserName = (userId, newName, newBio ) => {
     if (newName !== null) {
       setUsers(
         users.map((user) =>
@@ -142,7 +142,7 @@ const Profile = () => {
     }
   };
 
-  const changeProfileImage = (event) => {
+  const getNewImage = (event) => {
     let file = event.target.files[0];
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -211,7 +211,7 @@ const Profile = () => {
                         type="file"
                         className="form-control"
                         id="image"
-                        onChange={changeProfileImage}
+                        onChange={getNewImage}
                       />
                       <label htmlFor="image">Profile picture</label>
                     </div>

@@ -25,7 +25,11 @@ const Explore = () => {
       url_books += `?sortBy=name&order=desc`;
     }
     if (search !== "") {
-      url_books += `?name=${search}`;
+      if(selectSortValue !== 'sort'){
+        url_books += `&name=${search}`;
+      }else{
+        url_books += `?name=${search}`;
+      }
     }
 
     await fetch(url_books)
@@ -76,7 +80,7 @@ const Explore = () => {
                 {library &&
                   library.map((book, i) => {
                     return (
-                      <Col key={i} lg={2}>
+                      <Col key={i} xxl={2} lg={3} md={4} sm={6} xs={12}>
                         <BookCard book={book} />
                       </Col>
                     );
