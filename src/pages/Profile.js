@@ -8,9 +8,10 @@ import no_books from "../assets/images/no-education.png";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("read");
-  const [user, setUser] = useState(); 
+  const [user, setUser] = useState();
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const [editProfileDialog, setEditProfileDialog] = useState(false);
 
   const { name } = useParams();
@@ -118,59 +119,71 @@ const Profile = () => {
       return;
     }
   };
-  const changeUserName = (userId, newName,newBio) => { 
-    if(newName !== null){
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, name: newName } : user
-      ));
-      setLoggedIn({...loggedIn,name:newName})
-      window.location.replace(`http://localhost:3000/profile/${newName.split(" ").join("-")}`)
+  const changeUserName = (userId, newName, newBio , newProfileImage) => {
+    if (newName !== null) {
+      setUsers(
+        users.map((user) =>
+          user.id === userId ? { ...user, name: newName } : user
+        )
+      );
+      setLoggedIn({ ...loggedIn, name: newName });
+      window.location.replace(
+        `http://localhost:3000/profile/${newName.split(" ").join("-")}`
+      );
     }
-    if(newBio !== null){
-      setProfile(profile.map(user => 
-        user.userId === userId ? { ...user, biography: newBio } : user
-      ));
-      setEditProfileDialog(false)
-    } 
+    if (newBio !== null) {
+      setProfile(
+        profile.map((user) =>
+          user.userId === userId ? { ...user, biography: newBio } : user
+        )
+      );
     
+      setEditProfileDialog(false);
+    }
   };
-  
-  const editProfileSubmit = (e)=>{
+
+  const changeProfileImage = (event) => {
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      setProfileImage(e.target.result); 
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const editProfileSubmit = (e) => {
     e.preventDefault();
-    if(user.name !== username){
-      changeUserName(user.id,username,null)
+    if (user.name !== username) {
+      changeUserName(user.id, username, null);
     }
-    if(user.biography !== bio){
-      changeUserName(user.id,null,bio)
-
-  }
-   
-    if (user.name !== username && user.biography !== bio) {
-      console.log({username, bio});
+    if (user.biography !== bio) {
+      changeUserName(user.id, null, bio);
     }
- 
+    if(user.profile_image !== profileImage){
+      setProfile(
+          profile.map((user) =>
+            user.userId === loggedIn.id ? { ...user, profile_image: profileImage } : user
+          )
+        );
+    }
 
-  }
+    setEditProfileDialog(false);
 
-
-
+  };
 
   useEffect(() => {
     setTimeout(() => {
       getProfileData();
     }, 500);
   }, [name, booksRead, booksReading, booksToBeRead]);
-  
+
   useEffect(() => {
-    if(editProfileDialog){
-      setUsername(user.name)
-      setBio(user.biography)
+    if (editProfileDialog) {
+      setUsername(user.name);
+      setBio(user.biography);
+      setProfileImage(user.profile_image); 
     }
   }, [editProfileDialog]);
-
-
-
-
 
   return (
     <div className="w-75 py-3 ps-5">
@@ -181,17 +194,36 @@ const Profile = () => {
               className="position-absolute editProfile_backdrop d-flex align-items-center justify-content-center bg-black bg-opacity-75 w-100 h-100"
               style={{ top: 0, left: 0, zIndex: 20 }}
             >
-              <div className="editProfile_modal glass rounded p-3" style={{ width: "25%" }}>
+              <div
+                className="editProfile_modal glass rounded p-3"
+                style={{ width: "25%" }}
+              >
                 <h3 className="text-center text-white">Edit Profile</h3>
                 <form onSubmit={editProfileSubmit}>
-                  <div className="form-floating">
+                  <div>
+                    <div className="mx-auto rounded-circle overflow-hidden mb-2" style={{width:"80px",height:"80px"}}>
+                      <Image src={
+                    profileImage == null ? default_img : profileImage
+                }  width={'100%'} height={"100%"}/>
+                    </div>
+                    <div className="form-floating ">
+                      <input
+                        type="file"
+                        className="form-control"
+                        id="image"
+                        onChange={changeProfileImage}
+                      />
+                      <label htmlFor="image">Profile picture</label>
+                    </div>
+                  </div>
+                  <div className="form-floating mt-2">
                     <input
                       type="text"
                       className="form-control"
                       id="name"
                       placeholder="Name"
                       value={username}
-                      onChange={(e)=>setUsername(e.target.value)}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                     <label htmlFor="name">Name</label>
                   </div>
@@ -202,17 +234,24 @@ const Profile = () => {
                       placeholder="Bio"
                       style={{ resize: "none" }}
                       value={bio}
-                      onChange={(e)=>setBio(e.target.value)}
+                      onChange={(e) => setBio(e.target.value)}
                     ></textarea>
                     <label htmlFor="bio">Biography</label>
                   </div>
                   <div className="d-flex gap-3 mt-5">
                     <input
                       type="submit"
-                      className={`btn btn-primary text-white w-50 form-control border-0 ${username == user.name && bio == user.biography ?" disabled":"" }`}
-                      
+                      className={`btn btn-primary text-white w-50 form-control border-0 ${
+                        username == user.name && bio == user.biography && profileImage == user.profile_image
+                          ? " disabled"
+                          : ""
+                      }`}
                     />
-                    <Button variant="danger" className="w-50" onClick={()=>setEditProfileDialog(!editProfileDialog)}>
+                    <Button
+                      variant="danger"
+                      className="w-50"
+                      onClick={() => setEditProfileDialog(!editProfileDialog)}
+                    >
                       Close
                     </Button>
                   </div>
@@ -239,7 +278,9 @@ const Profile = () => {
               </div>
               {btnType()}
             </div>
-            <div className="mt-3 mb-5 secondary-color-text">{user.biography}</div>
+            <div className="mt-3 mb-5 secondary-color-text">
+              {user.biography}
+            </div>
           </div>
           <div>
             <div className="tabs d-flex">
