@@ -9,28 +9,38 @@ const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBookResult, setSearchBookResult] = useState([]);
   const [searchUserResult, setSearchUserResult] = useState([]);
-  const {
-    users,
-    books,
-    loggedIn,
-    DoIFollowThisUser,
-    url_books,
-    profile,
-    setLoading,
-  } = useContext(HippoReadsContext);
+  const [searchAuthorsResult, setSearchAuthorsResult] = useState([]);
+  const { users, books, authors, loggedIn, DoIFollowThisUser, profile } =
+    useContext(HippoReadsContext);
 
-  const searchBook = async () => {
-    setSearchBookResult(
-      books.filter((book) =>
-        book.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+  const searchResults = async () => {
+    let booksearched = books.filter((book) =>
+      book.name.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
+    if (booksearched.length < 4) {
+      booksearched = [
+        ...booksearched,
+        ...books.filter((book) =>
+          book.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+      ];
+    }
+
+    setSearchBookResult([...new Set(booksearched)]);
+
     setSearchUserResult(
       users.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
+
+    setSearchAuthorsResult(
+      authors.filter((author) =>
+        author.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
   };
+
   useEffect(() => {
     setUserSuggestion(
       users.filter(
@@ -41,7 +51,7 @@ const Sidebar = () => {
   }, []);
   useEffect(() => {
     if (searchTerm.length != 0) {
-      searchBook();
+      searchResults();
     }
   }, [searchTerm]);
 
@@ -76,14 +86,38 @@ const Sidebar = () => {
               ))}
             </div>
             <div>
+              <small className="fw-bold">AUTHORS</small>
+              {searchAuthorsResult.slice(0, 4).map((author) => (
+                <Link
+                  to={`/author/${author.name}`}
+                  className="text-decoration-none secondary-color-text"
+                >
+                  <div className="d-flex align-items-center gap-1 mb-1">
+                    <Image
+                      src={author.image == null
+                        ? default_photo
+                        : author.image}
+                      width={40}
+                      height={40}
+                      className="rounded-circle"
+                    />
+                    <h6>
+                      {author.name.length >= 20
+                        ? author.name.slice(0, 20) + "..."
+                        : author.name}
+                    </h6>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div>
               <small className="fw-bold">USERS</small>
               {searchUserResult.slice(0, 4).map((user) => {
-                let userP = profile.find((up) => up.userId == user.id );
+                let userP = profile.find((up) => up.userId == user.id);
                 return (
                   <Link
-                  to={`/profile/${user.name.split(" ").join("-")}`}
-                  className="text-decoration-none secondary-color-text"
-
+                    to={`/profile/${user.name.split(" ").join("-")}`}
+                    className="text-decoration-none secondary-color-text"
                   >
                     <div className="d-flex align-items-center gap-1 mb-1">
                       <Image
