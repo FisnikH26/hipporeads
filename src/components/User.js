@@ -16,7 +16,7 @@ useEffect(()=>{
 
   return (
     <div
-      className="d-flex align-items-center justify-content-between border border-dark rounded-pill px-1 mt-2"
+      className="d-flex align-items-center justify-content-between border secondary-color-border rounded-pill px-1 mt-2"
       style={{ height: "40px" }}
     >
       <div
