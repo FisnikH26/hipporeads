@@ -171,6 +171,7 @@ export function HippoReadsContextProvider(props) {
   const contextValue = {
     books,
     setBooks,
+    authors,
     activePage,
     setActivePage,
     loggedIn,
