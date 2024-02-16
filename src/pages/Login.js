@@ -59,7 +59,7 @@ const Login = () => {
         </Col>
         <Col lg={6}>
           <h3 className="text-center text-white mb-5">Log In</h3>
-          <form className="d-flex flex-column gap-4" onSubmit={loginForm}>
+          <form className="d-flex flex-column gap-4 mb-2" onSubmit={loginForm}>
             <div>
               <input
                 type="email"
@@ -84,15 +84,15 @@ const Login = () => {
             <div>
               <input
                 type="submit"
-                className="form-control bg-dark text-white border-0"
+                className="form-control btn btn-dark text-white border-0"
                 value="Log In"
               />
             </div>
           </form>
 
           <small className="text-center text-white">
-            Don't have an account ?{" "}
-            <Link to="/signup" className="fw-semibold text-dark">
+            Don't have an account ?
+            <Link to="/signup" className="fw-semibold text-decoration-none bg-white text-dark py-1 ms-2 px-2 rounded">
               Sign Up
             </Link>
           </small>

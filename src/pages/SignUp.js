@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import { v4 as userId } from "uuid";
-import happyHippo from "../assets/images/hd8ziqoq.png";
+import happyHippo from "../assets/images/hippo_walking_into_a_library.jpg";
 import { Link } from "react-router-dom";
 import { todayDate } from "../assets/data/todaydate";
 import { HippoReadsContext } from "../assets/context/HippoReadsContext";
@@ -90,7 +90,7 @@ const SignUp = () => {
         </Col>
         <Col lg={6}>
           <h3 className="text-center text-white mb-4">Sign up</h3>
-          <form className="d-flex flex-column gap-2" onSubmit={submit_signUp}>
+          <form className="d-flex flex-column gap-2 mb-2" onSubmit={submit_signUp}>
             <div>
               <input
                 type="text"
@@ -123,7 +123,7 @@ const SignUp = () => {
               <input
                 type="password"
                 className="form-control mb-1"
-                placeholder="password"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -136,15 +136,15 @@ const SignUp = () => {
             <div>
               <input
                 type="submit"
-                className="form-control bg-dark text-white border-0"
+                className="form-control fw-semibold btn btn-dark text-white border-0"
                 value="Sign Up"
               />
             </div>
           </form>
 
           <small className="text-center text-white">
-            Already have an account?{" "}
-            <Link to="/" className="text-dark fw-semibold">
+            Already have an account?
+            <Link to="/" className="fw-semibold text-decoration-none bg-white text-dark py-1 ms-2 px-2 rounded">
               Log In
             </Link>
           </small>
