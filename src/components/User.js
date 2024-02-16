@@ -1,10 +1,18 @@
 import { Button, Image } from "react-bootstrap";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import photo from "../assets/images/OIG1.jpg";
 import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 import { Link } from "react-router-dom";
 const User = ({ user }) => {
-  const { followUser, unFollowUser,DoIFollowThisUser } = useContext(HippoReadsContext);
+  const {profile, followUser, unFollowUser,DoIFollowThisUser } = useContext(HippoReadsContext);
+  const [userProfile,setUserProfile] = useState([])
+useEffect(()=>{
+  setUserProfile(profile.find(userP=> userP.userId == user.id))
+
+
+},[])
+
+  
 
   return (
     <div
@@ -15,7 +23,7 @@ const User = ({ user }) => {
         className="rounded-circle secondary-color-bg overflow-hidden "
         style={{ width: "34px", height: "34px" }}
       >
-        <Image src={photo} width="100%" />
+        <Image src={userProfile.profile_image || photo} width="100%" />
       </div>
       <Link to={`profile/${user.name.split(" ").join("-")}`} className="text-decoration-none secondary-color-text">
         <div>
