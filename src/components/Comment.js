@@ -9,12 +9,16 @@ const Comment = ({ comment }) => {
     useContext(HippoReadsContext);
 
   useEffect(() => {
-    setCommenter({
-      name: users.find((user) => user.id === comment.userId).name,
-      profile_image: profile.find((user) => user.userId === comment.userId)
+    if(users.find((user) => user.id === comment.userId)){
+      setCommenter({
+        name: users.find((user) => user.id === comment.userId).name,
+        profile_image: profile.find((user) => user.userId === comment.userId)
         .profile_image,
-    });
-  }, [comment]);
+      });
+    }else{
+
+    }
+  }, [comment,users,bookComments]);
 
   return (
     <div className="comment d-flex align-items-center gap-3">
@@ -30,8 +34,9 @@ const Comment = ({ comment }) => {
       </div>
       <div style={{ flex: 2 }}>
         <div className="d-flex gap-3">
-          <h5 className="secondary-color-text">{commenter.name}</h5>
-          <span className="main-lighter-text">2/2/2024</span>
+          <h5 className="secondary-color-text">{commenter.name ? commenter.name : <i>Deleted Account</i>}</h5>
+          <span className="main-lighter-text">{comment.created_at[0].day
+}/{comment.created_at[0].month}/{comment.created_at[0].year}</span>
         </div>
         <div className="secondary-color-text">
           {comment.commentText.split("\n").map((ct, i) => (

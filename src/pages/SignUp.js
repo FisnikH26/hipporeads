@@ -18,6 +18,8 @@ const SignUp = () => {
 
   const [fullname, setFullname] = useState("");
   const [fullnameErr, setFullnameErr] = useState("");
+  const [username, setUsername] = useState("");
+  const [usernameErr, setUsernameErr] = useState("");
   const [email, setEmail] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [password, setPassword] = useState("");
@@ -26,17 +28,30 @@ const SignUp = () => {
   const submit_signUp = (e) => {
     e.preventDefault();
     let goodfullname = false,
+      goodUsername = false,
       goodEmail = false,
       goodpwd = false;
 
     if (fullname == "") {
       setFullnameErr("fullname is empty");
-    } else if (/^[a-zA-Z]+$/.test(fullname)) {
+    } else if (!(/^[a-zA-Z ]+$/).test(fullname)) {
       setFullnameErr("Only use letters");
-    } else {
+    }else {
       setFullnameErr("");
       goodfullname = true;
     }
+    
+    if (username == "") {
+      setUsernameErr("username is empty");
+    } else if (!(/^\w+$/).test(username)) {
+      setUsernameErr("Only use numbers and letters and underscore");
+    }else if(users.find(user=> user.username == username)){
+      setUsernameErr("username already taken");
+    } else {
+      setUsernameErr("");
+      goodUsername = true;
+    }
+
     if (email == "") {
       setEmailErr("email is empty");
     } else if (
@@ -55,10 +70,11 @@ const SignUp = () => {
       goodpwd = true;
     }
 
-    if (goodfullname && goodEmail && goodpwd) {
+    if (goodfullname && goodUsername && goodEmail && goodpwd) {
       let newUser = {
         id: userId(),
         name: fullname,
+        username: username,
         email: email,
         password: password,
         created_at: todayDate(),
@@ -66,8 +82,7 @@ const SignUp = () => {
       let newUserProfile = {
         id: userId(),
         userId: newUser.id,
-        biography: "no Bio Yet",
-        created_at: newUser.created_at,
+        biography: "no Bio Yet", 
         profile_image: null,
       };
 
@@ -84,9 +99,9 @@ const SignUp = () => {
       className="signUp_container d-flex align-items-center justify-content-center "
       style={{ minHeight: "100dvh" }}
     >
-      <Row className="w-50 overflow-hidden rounded mx-auto mt-4">
+      <Row className="glass w-50 overflow-hidden rounded mx-auto mt-4 p-2">
         <Col lg={6} className="ps-0">
-          <Image src={happyHippo} width="100%" />
+          <Image src={happyHippo} className="w-100 h-100 rounded-start" />
         </Col>
         <Col lg={6}>
           <h3 className="text-center text-white mb-4">Sign up</h3>
@@ -103,6 +118,23 @@ const SignUp = () => {
                 <b className="m-0 py-0 px-1 rounded bg-danger text-white">
                   {fullnameErr}
                 </b>
+              )}
+            </div>
+            <div>
+              <input
+                type="text"
+                className="form-control mb-1"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              {usernameErr.length !== 0 && (
+                <small>
+
+                <b className="m-0 py-0 px-1 rounded bg-danger text-white">
+                  {usernameErr}
+                </b>
+                </small>
               )}
             </div>
             <div>

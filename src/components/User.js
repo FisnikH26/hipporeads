@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const User = ({ user }) => {
   const {profile, followUser, unFollowUser,DoIFollowThisUser } = useContext(HippoReadsContext);
   const [userProfile,setUserProfile] = useState([])
-useEffect(()=>{
+useEffect(()=>{ 
   setUserProfile(profile.find(userP=> userP.userId == user.id))
 
 

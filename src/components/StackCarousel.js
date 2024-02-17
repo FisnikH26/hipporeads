@@ -12,13 +12,6 @@ const StackCarousel = () => {
   const [myShelf, setMyShelf] = useState([]);
 
   useEffect(() => {
-    // setUserbooksRead(booksRead.filter((book) => book.userId !== loggedIn.id));
-    // setUserbooksReading(
-    //   booksReading.filter((book) => book.userId !== loggedIn.id)
-    // );
-    // setUserbookswantToRead(
-    //   booksToBeRead.filter((book) => book.userId !== loggedIn.id)
-    // );
     setMyShelf({
       read: booksRead.filter((book) => book.userId == loggedIn.id),
       reading: booksReading.filter((book) => book.userId == loggedIn.id),
@@ -123,8 +116,7 @@ const StackCarousel = () => {
                     }deg, 
                       #FFC154 ${
                         (myShelf.read.length / myShelf.totalBooksInShelf) *
-                          360 +
-                        1
+                          360
                       }deg 
                         ${
                           (myShelf.read.length / myShelf.totalBooksInShelf) *

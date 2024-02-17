@@ -7,7 +7,6 @@ import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 import default_img from "../assets/images/OIG1.jpg";
 
 const AuthorProfile = () => {
-  const [activeTab, setActiveTab] = useState("read");
   const [author, setAuthor] = useState();
   const [authorBooks, setAuthorBooks] = useState();
 
@@ -22,7 +21,9 @@ const AuthorProfile = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        setAuthor(data[0]);
+        if (data !== "Not found") {
+          setAuthor(data[0]);
+        }
         setLoading(false);
       });
   };
@@ -39,18 +40,17 @@ const AuthorProfile = () => {
           <div>
             <div className="d-flex gap-3 align-items-center w-75 ">
               <Image
-                src={
-                  author.image == null
-                    ? default_img
-                    : author.image
-                }
+                src={author.image == null ? default_img : author.image}
                 width={150}
                 height={150}
                 className="rounded-circle"
               />
               <div>
                 <h2>{author.name}</h2>
-                <h6>{authorBooks.length} Book  <i>({author.number_published_books} total books)</i></h6>
+                <h6>
+                  {authorBooks.length} Book{" "}
+                  <i>({author.number_published_books} total books)</i>
+                </h6>
               </div>
             </div>
             <div className="mt-3 mb-5">
@@ -67,7 +67,7 @@ const AuthorProfile = () => {
                 role="button"
                 className="fw-semibold w-100 text-center border secondary-color-border py-2"
               >
-                {author.name}'s books 
+                {author.name}'s books
               </div>
             </div>
             <div>

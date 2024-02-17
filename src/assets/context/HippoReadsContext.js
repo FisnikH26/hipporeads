@@ -52,7 +52,6 @@ export function HippoReadsContextProvider(props) {
       setUserFollowers([]);
     } else {
       let userFollowed = {
-        id: id(),
         userId: loggedIn.id,
         followerId: user.id,
       };
@@ -84,7 +83,6 @@ export function HippoReadsContextProvider(props) {
 
   const addBookToShelf = (shelfName, book) => {
     let newBook = {
-      id: id(),
       userId: loggedIn.id,
       book: book,
     };

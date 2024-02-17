@@ -18,6 +18,9 @@ const BookDetails = () => {
     bookComments,
     setBookComments,
     profile,
+    booksRead,
+    booksReading,
+    booksToBeRead
   } = useContext(HippoReadsContext);
   const [book, setBook] = useState();
   const [commentText, setCommentText] = useState("");
@@ -28,10 +31,12 @@ const BookDetails = () => {
     await fetch(url_books + `/${id}`)
       .then((res) => res.json())
       .then((data) => {
+        if(data !== "Not found"){
         setBook(data);
-        setLoading(false);
         setRecentlyViewedBooks([...recentlyViewedBooks, data]);
-      });
+      }
+      setLoading(false);
+      })
   };
   const addComment = () => {
     let userProfile = profile.find((user) => user.userId == loggedIn.id);
@@ -69,15 +74,20 @@ const BookDetails = () => {
           <Row>
             <Col lg={3}>
               <Image src={book.cover} width="100%" />
-              <div className="d-flex gap-1 mt-3">
+              <div className="d-flex flex-column gap-1 mt-3">
                 <Button className="read-btn text-white" variant="" onClick={() => addBookToShelf("read", book)}>
                   Read
+                  {booksRead.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
                 </Button>
                 <Button className="reading-btn text-white" variant="" onClick={() => addBookToShelf("reading", book)}>
                   Reading
+                  {booksReading.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
+
                 </Button>
                 <Button className="wanttoread-btn text-white" variant="" onClick={() => addBookToShelf("want to read", book)}>
                   Want to read
+                  {booksToBeRead.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
+
                 </Button>
               </div>
             </Col>
@@ -166,9 +176,9 @@ const BookDetails = () => {
 
             <div className="comments pt-5">
               {comments.length !== 0 &&
-                comments.map((comment) => {
+                comments.map((comment,i) => {
                   return (
-                    <Comment comment={comment}/>
+                    <Comment key={i} comment={comment}/>
                   );
                 }).reverse()}
             </div>

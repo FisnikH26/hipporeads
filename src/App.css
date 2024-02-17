@@ -183,10 +183,7 @@ body,
   background-repeat: no-repeat;
   background-size: cover;
 }
-.signUp_container > .row {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-}
+ 
 
 .bookCard_imgContainer {
   height: 300px;
@@ -207,4 +204,10 @@ body,
 .glass{
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
+}
+
+.grid_autoFit{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+  gap: 10px 0;
 }

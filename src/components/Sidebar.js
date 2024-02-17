@@ -54,24 +54,34 @@ const Sidebar = () => {
       searchResults();
     }
   }, [searchTerm]);
-
+  const handlesearch=(e)=>{
+    e.preventDefault();
+    
+    if(searchTerm != "")
+    {
+      window.location.replace(`http://localhost:3000/search/q=${searchTerm}`)
+    }
+  }
   return (
     <div className="pt-3">
       <div className="position-relative">
         <h6>Quick Search</h6>
-        <input
-          type="search"
-          className="form-control rounded-pill secondary-color-border secondary-color-text main-color-bg"
-          placeholder="Search"
-          onKeyUp={(e) => setSearchTerm(e.target.value)}
-        />
+        <form onSubmit={handlesearch}>
+          <input
+            type="search"
+            className="form-control rounded-pill secondary-color-border secondary-color-text main-color-bg"
+            placeholder="Search"
+            onKeyUp={(e) => setSearchTerm(e.target.value)}
+          />
+        </form>
         {searchTerm.length != 0 && (
           <div className="search_result position-absolute bg-white w-100 p-2 text-secondary border">
             <div>
-              <small className="fw-bold">BOOKS</small>
+            <small className="fw-bold">BOOKS</small>
               {searchBookResult.slice(0, 4).map((book) => (
                 <Link
                   to={`/book/${book.id}`}
+                  key={book.id}
                   className="text-decoration-none secondary-color-text"
                 >
                   <div className="d-flex align-items-center gap-1 mb-1">
@@ -94,9 +104,7 @@ const Sidebar = () => {
                 >
                   <div className="d-flex align-items-center gap-1 mb-1">
                     <Image
-                      src={author.image == null
-                        ? default_photo
-                        : author.image}
+                      src={author.image == null ? default_photo : author.image}
                       width={40}
                       height={40}
                       className="rounded-circle"
@@ -116,25 +124,33 @@ const Sidebar = () => {
                 let userP = profile.find((up) => up.userId == user.id);
                 return (
                   <Link
-                    to={`/profile/${user.name.split(" ").join("-")}`}
+                    to={`/profile/@${user.username}`}
                     className="text-decoration-none secondary-color-text"
                   >
-                    <div className="d-flex align-items-center gap-1 mb-1">
+                    <div className="d-flex align-items-center gap-2 mb-1">
                       <Image
                         src={
                           userP.profile_image
                             ? userP.profile_image
                             : default_photo
                         }
-                        width={40}
-                        height={40}
+                        width={50}
+                        height={50}
                         className="rounded-circle"
                       />
-                      <h6>
-                        {user.name.length >= 20
-                          ? user.name.slice(0, 20) + "..."
-                          : user.name}
-                      </h6>
+                      <div className="">
+                        <h6 className="mb-0">
+                          {user.name.length >= 20
+                            ? user.name.slice(0, 20) + "..."
+                            : user.name}
+                        </h6>
+                        <p className="mb-0 fw-semibold text-secondary">
+                          @
+                          {user.username.length >= 20
+                            ? user.username.slice(0, 20) + "..."
+                            : user.username}
+                        </p>
+                      </div>
                     </div>
                   </Link>
                 );
