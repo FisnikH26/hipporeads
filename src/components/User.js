@@ -25,7 +25,7 @@ useEffect(()=>{
       >
         <Image src={userProfile.profile_image || photo} className="object-fit-cover w-100 h-100" alt={user.name + "'s profile image"}/>
       </div>
-      <Link to={`profile/@${user.username}`} className="text-decoration-none secondary-color-text">
+      <Link to={`@${user.username}`} className="text-decoration-none secondary-color-text">
         <div>
           <b>{user.name}</b>
         </div>

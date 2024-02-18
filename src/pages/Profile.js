@@ -117,20 +117,20 @@ const Profile = () => {
   const removeBookFromShelf = (shelfname, book) => {
     if (shelfname === "read") {
       setBooksRead(
-        booksRead.filter((bookToBeRemoved) => bookToBeRemoved.id !== book.id)
+        booksRead.filter((bookToBeRemoved) => bookToBeRemoved.book.id !== book.id)
       );
       return;
     }
     if (shelfname === "reading") {
       setBooksReading(
-        booksReading.filter((bookToBeRemoved) => bookToBeRemoved.id !== book.id)
+        booksReading.filter((bookToBeRemoved) => bookToBeRemoved.book.id !== book.id)
       );
       return;
     }
     if (shelfname === "want to read") {
       setBooksToBeRead(
         booksToBeRead.filter(
-          (bookToBeRemoved) => bookToBeRemoved.id !== book.id
+          (bookToBeRemoved) => bookToBeRemoved.id !== book.book.id
         )
       );
       return;
@@ -296,7 +296,8 @@ const Profile = () => {
                 className="rounded-circle border secondary-color-border main-color-bg object-fit-cover"
               />
               <div style={{ flex: 2 }}>
-                <h4 className="secondary-color-text">{user.name}</h4>
+                <h4 className="secondary-color-text m-0">{user.name}</h4>
+                <p className="fw-semibold mt-0 main-lighter-text">@{user.username}</p>
                 <div className="d-flex gap-3 fw-semibold secondary-color-text pb-1">
                   <div role="button">{user.followers.length} Followers</div>
                   <div>{user.following.length} Followings</div>
@@ -337,13 +338,13 @@ const Profile = () => {
                 {user.bookRead.length ? (
                   <Row>
                     {user.bookRead.map((book) => (
-                      <Col lg={3} key={book.id} className="position-relative">
+                      <Col lg={3} key={book.book.id} className="position-relative">
                         <BookCard book={book.book} />
                         {username.split("@").join("") == loggedIn.username && (
                           <Button
                             variant="danger"
                             className="btn-sm rounded-0 rounded-start position-absolute"
-                            onClick={() => removeBookFromShelf("read", book)}
+                            onClick={() => removeBookFromShelf("read", book.book)}
                             style={{ top: "15px", right: "12px" }}
                           >
                             X

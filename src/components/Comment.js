@@ -22,36 +22,36 @@ const Comment = ({ comment }) => {
   }, [comment, users, bookComments]);
 
   return (
-    <div className="comment d-flex align-items-center gap-3">
+    <div className="comment d-flex align-items-center gap-3 mb-3">
       <div>
         <Image
           src={
             commenter.profile_image ? commenter.profile_image : default_image
           }
-          width={80}
-          height={80}
-          className="rounded-circle"
+          width={50}
+          height={50}
+          className="rounded-circle object-fit-cover"
         />
       </div>
       <div style={{ flex: 2 }}>
         <div className="d-flex gap-3">
           {commenter.name ?
-          <Link to={`/profile/@${commenter.username}`} className="text-decoration-none">
-            <h5 className="secondary-color-text">
+          <Link to={`/@${commenter.username}`} className="text-decoration-none">
+            <h6 className="secondary-color-text mb-0">
               {commenter.name }
-            </h5>
+            </h6>
           </Link>:
-          <h5 className="secondary-color-text">
+          <h6 className="secondary-color-text m-0">
             <i>Deleted Account</i>
-          </h5>}
+          </h6>}
           <span className="main-lighter-text">
-            {comment.created_at[0].day}/{comment.created_at[0].month}/
-            {comment.created_at[0].year}
+            <i>{comment.created_at[0].day}/{comment.created_at[0].month}/
+            {comment.created_at[0].year}</i> - <i>{comment.created_at[1].hour +":"+ comment.created_at[1].minutes} </i>
           </span>
         </div>
         <div className="secondary-color-text">
           {comment.commentText.split("\n").map((ct, i) => (
-            <p key={i * ct.length} className="m-0">
+            <p key={i * ct.length} className="m-0 fs-6">
               {ct}
             </p>
           ))}
@@ -73,3 +73,4 @@ const Comment = ({ comment }) => {
 };
 
 export default Comment;
+ 

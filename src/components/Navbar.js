@@ -57,7 +57,7 @@ const Navbar = () => {
           </Link>
           <Link
             className="text-decoration-none secondary-color-text fw-semibold fs-5"
-            to={`/profile/@${loggedIn.username}`}
+            to={`/@${loggedIn.username}`}
           >
             <li>Profile</li>
           </Link>

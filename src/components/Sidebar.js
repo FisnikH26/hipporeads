@@ -98,7 +98,7 @@ const Sidebar = () => {
                 let userP = profile.find((up) => up.userId == user.id);
                 return (
                   <Link
-                    to={`/profile/@${user.username}`}
+                    to={`/@${user.username}`}
                     key={user.id}
                     className="text-decoration-none secondary-color-text"
                   >

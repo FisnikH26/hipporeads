@@ -8,11 +8,13 @@ export function HippoReadsContextProvider(props) {
   const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activePage, setActivePage] = useState("");
-  
+
   const [theme, setTheme] = useLocalStorage("theme");
 
   const [loggedIn, setLoggedIn] = useLocalStorage("loggedIn");
-  const [recentlyViewedBooks, setRecentlyViewedBooks] = useLocalStorage("recentlyViewedBooks");
+  const [recentlyViewedBooks, setRecentlyViewedBooks] = useLocalStorage(
+    "recentlyViewedBooks"
+  );
   const [profile, setProfile] = useLocalStorage("profile");
   const [users, setUsers] = useLocalStorage("users");
   const [booksRead, setBooksRead] = useLocalStorage("booksRead");
@@ -141,14 +143,12 @@ export function HippoReadsContextProvider(props) {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  } 
+  }
   const [searchBookResult, setSearchBookResult] = useState([]);
   const [searchUserResult, setSearchUserResult] = useState([]);
   const [searchAuthorsResult, setSearchAuthorsResult] = useState([]);
 
-
-
-  const searchResults = async (searchTerm) => { 
+  const searchResults = async (searchTerm) => {
     let booksearched = books.filter((book) =>
       book.name.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
@@ -163,29 +163,37 @@ export function HippoReadsContextProvider(props) {
 
     setSearchBookResult([...new Set(booksearched)]);
 
-    setSearchUserResult(
-      users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    let userSearched = users.filter((user) =>
+      user.name.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
-      let authorSearched = authors.filter((author) =>
-      author.name.toLowerCase().startsWith(searchTerm.toLowerCase()))
-      
-      if (authorSearched.length < 4) {
-        authorSearched = [
-          ...authorSearched,
-          ...authors.filter((authors) =>
-          authors.name.toLowerCase().includes(searchTerm.toLowerCase())
-          ),
-        ];
-      }
-    setSearchAuthorsResult([...new Set(authorSearched)]);
- 
-  }; 
 
+    if (userSearched.length < 4) {
+      userSearched = [
+        ...userSearched,
+        ...users.filter((user) =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+      ];
+    }
+
+    setSearchUserResult([...new Set(userSearched)]);
+    
+    let authorSearched = authors.filter((author) =>
+      author.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+
+    if (authorSearched.length < 4) {
+      authorSearched = [
+        ...authorSearched,
+        ...authors.filter((authors) =>
+          authors.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+      ];
+    }
+    setSearchAuthorsResult([...new Set(authorSearched)]);
+  };
 
   useEffect(() => {
-   
     if (users == undefined) {
       setUsers([]);
     }
@@ -220,7 +228,8 @@ export function HippoReadsContextProvider(props) {
     setBooks,
     authors,
     activePage,
-    setActivePage,searchBookResult,
+    setActivePage,
+    searchBookResult,
     searchUserResult,
     searchAuthorsResult,
     loggedIn,
@@ -237,14 +246,21 @@ export function HippoReadsContextProvider(props) {
     setBooksToBeRead,
     addBookToShelf,
     url_books,
-    loading, setLoading,
-    recentlyViewedBooks, setRecentlyViewedBooks, 
-    bookComments, setBookComments,
-    profile, setProfile,
-    users, setUsers,
-    userFollowers, setUserFollowers,
-    theme, setTheme,
-    shuffle
+    loading,
+    setLoading,
+    recentlyViewedBooks,
+    setRecentlyViewedBooks,
+    bookComments,
+    setBookComments,
+    profile,
+    setProfile,
+    users,
+    setUsers,
+    userFollowers,
+    setUserFollowers,
+    theme,
+    setTheme,
+    shuffle,
   };
 
   return (

@@ -58,6 +58,8 @@ const SignUp = () => {
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
     ) {
       setEmailErr("email is invalid");
+    }else if(users.find(user=> user.email == email)){
+      setEmailErr("email already taken");
     } else {
       setEmailErr("");
       goodEmail = true;

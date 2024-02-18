@@ -21,7 +21,9 @@ const Login = () => {
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
     ) {
       setEmailErr("Email is invalid");
-    } else {
+    } else if(users.find(user=> user.email == email) == undefined){
+      setEmailErr("No account with this email");
+    }else {
       setEmailErr("");
       goodEmail = true
     }
@@ -63,22 +65,22 @@ const Login = () => {
             <div>
               <input
                 type="email"
-                className="form-control"
+                className="form-control mb-1"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {emailErr && <b className="text-danger">{emailErr}</b>}
+              {emailErr && <b className="m-0  py-0 px-1 rounded bg-danger text-white">{emailErr}</b>}
             </div>
             <div>
               <input
                 type="password"
-                className="form-control"
+                className="form-control mb-1"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {passwordErr && <b className="text-danger">{passwordErr}</b>}
+              {passwordErr && <b className="m-0 py-0 px-1 rounded bg-danger text-white">{passwordErr}</b>}
 
             </div>
             <div>

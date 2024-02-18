@@ -8,14 +8,13 @@ const Explore = () => {
   const [selectSortValue, setSelectSortValue] = useState("sort");
   const [library, setLibrary] = useState([]);
   const [search, setSearch] = useState("");
-  const [booksPerPage, setBooksPerPage] = useState(12);
+  const [booksPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { setActivePage, books } = useContext(HippoReadsContext);
   useEffect(() => {
     setActivePage("Explore");
   });
-  // |1 2 3| 4 5
   const getBooks = async () => {
     let url_books = `https://65c5cbb5e5b94dfca2e04e3f.mockapi.io/hipporeads/books?p=${currentPage}&l=${booksPerPage}`;
 
@@ -30,7 +29,11 @@ const Explore = () => {
     await fetch(url_books)
       .then((res) => res.json())
       .then((data) => {
+       if(data !== "Not found"){
         setLibrary(data);
+       }else{
+        setLibrary([])
+       }
       });
   };
 
@@ -136,14 +139,14 @@ const Explore = () => {
                     </Button>
                   </div>
                 )}
-                {library &&
-                  library.map((book, i) => {
+                {library.length  ?
+                  library.map((book) => {
                     return (
                       <Col key={book.id} xxl={2} lg={3} md={4} sm={6} xs={12}>
                         <BookCard book={book} />
                       </Col>
                     );
-                  })}
+                  }): <i>No results for {search}</i>}
               </Row>
             </Col>
           </Row>

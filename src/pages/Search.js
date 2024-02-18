@@ -12,12 +12,11 @@ const Search = () => {
     searchUserResult,
     searchAuthorsResult,
     searchResults,
-    loading
   } = useContext(HippoReadsContext);
   const [activeTab, setActiveTab] = useState("books");
 
   useEffect(() => {
-    searchResults(search.split("q=").join(""));
+      searchResults(search.split("q=").join(""));
   }, [search, searchBookResult, searchUserResult, searchAuthorsResult]);
   return (
     <div className="pt-5">
@@ -25,7 +24,7 @@ const Search = () => {
       <div className=" d-flex mx-auto align-items-center mb-3">
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${
+          className={`border secondary-color-border fw-semibold text-center py-1 ${
             activeTab === "books" ? "text-primary" : ""
           }`}
           style={{ flex: 1 }}
@@ -38,7 +37,7 @@ const Search = () => {
         </div>
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${
+          className={`border secondary-color-border fw-semibold text-center py-1 ${
             activeTab === "users" ? "text-primary" : ""
           }`}
           onClick={() => setActiveTab("users")}
@@ -48,7 +47,7 @@ const Search = () => {
         </div>
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${
+          className={`border secondary-color-border fw-semibold text-center py-1 ${
             activeTab === "authors" ? "text-primary" : ""
           }`}
           onClick={() => setActiveTab("authors")}
