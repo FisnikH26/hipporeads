@@ -11,8 +11,7 @@ const Explore = () => {
   const [booksPerPage, setBooksPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { loading, setLoading, setActivePage, books } =
-    useContext(HippoReadsContext);
+  const { setActivePage, books } = useContext(HippoReadsContext);
   useEffect(() => {
     setActivePage("Explore");
   });
@@ -50,7 +49,7 @@ const Explore = () => {
 
     return nums;
   };
-//1 2 3| 4 5|
+  //1 2 3| 4 5|
   const pointersOne = () => {
     let pointer_one = 0;
 
@@ -62,7 +61,7 @@ const Explore = () => {
   const pointerstwo = () => {
     let pointer_two = 3;
 
-    if (currentPage > getPaginationNumbers()[pointer_two -1]) {
+    if (currentPage > getPaginationNumbers()[pointer_two - 1]) {
       pointer_two += 3;
     }
 
@@ -76,15 +75,13 @@ const Explore = () => {
     setCurrentPage((prev) => prev - 1);
   };
   useEffect(() => {
-    getBooks(); 
-    console.log(pointersOne())
-    console.log(pointerstwo())
+    getBooks();
+    console.log(pointersOne());
+    console.log(pointerstwo());
   }, [selectSortValue, search, currentPage]);
   return (
     <>
-      {loading ? (
-        "Loading"
-      ) : (
+      {books && (
         <div className="explore py-3 px-5">
           <Row>
             <Col lg={12} className=" ">
@@ -117,30 +114,32 @@ const Explore = () => {
                 </div>
               </div>
               <Row className="mt-5">
-                <div className="d-flex justify-content-end gap-2">
-                  <Button onClick={() => prevPage()}>
-                    <i className="fa-solid fa-arrow-left"></i>
-                  </Button>
-                  {getPaginationNumbers()
-                    .slice(pointersOne(), pointerstwo())
-                    .map((num) => (
-                      <button
-                        key={num}
-                        className={`btn ${
-                          currentPage == num ? " btn-danger" : "btn-success"
-                        }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-                  <Button onClick={() => nextPage()}>
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </Button>
-                </div>
+                {search.length == 0 && (
+                  <div className="d-flex justify-content-end gap-2">
+                    <Button onClick={() => prevPage()}>
+                      <i className="fa-solid fa-arrow-left"></i>
+                    </Button>
+                    {getPaginationNumbers()
+                      .slice(pointersOne(), pointerstwo())
+                      .map((num) => (
+                        <button
+                          key={num}
+                          className={`btn ${
+                            currentPage == num ? " btn-danger" : "btn-success"
+                          }`}
+                        >
+                          {num}
+                        </button>
+                      ))}
+                    <Button onClick={() => nextPage()}>
+                      <i className="fa-solid fa-arrow-right"></i>
+                    </Button>
+                  </div>
+                )}
                 {library &&
                   library.map((book, i) => {
                     return (
-                      <Col key={i} xxl={2} lg={3} md={4} sm={6} xs={12}>
+                      <Col key={book.id} xxl={2} lg={3} md={4} sm={6} xs={12}>
                         <BookCard book={book} />
                       </Col>
                     );

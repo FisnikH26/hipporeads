@@ -144,7 +144,7 @@ const BookDetails = () => {
                     <br />
                     {book.description.includes("\n") ? (
                       book.description.split("\n").map((des) => {
-                        return <p className="fw-semibold secondary-color-text">{des}</p>;
+                        return <p key={des} className="fw-semibold secondary-color-text">{des}</p>;
                       })
                     ) : (
                       <p className="fw-semibold secondary-color-text">{book.description}</p>

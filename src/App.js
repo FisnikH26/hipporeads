@@ -31,7 +31,7 @@ function App() {
         <div className={`App ${theme}`}>
           <Row className="mx-0 mh100">
             <Col
-              lg={2}
+              lg={2} md={1}
               className="mh100 pt-3 border-end secondary-color-border "
             >
               <Navbar />

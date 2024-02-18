@@ -3,69 +3,65 @@ import { Link, useParams } from "react-router-dom";
 import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 import User from "../components/User";
 import { Col, Image, Row } from "react-bootstrap";
-import default_photo from "../assets/images/hd8ziqoq.png";
+import default_photo from "../assets/images/OIG1.jpg";
 import BookCard from "../components/BookCard";
 const Search = () => {
   const { search } = useParams();
-  const { users, books, authors } = useContext(HippoReadsContext);
-  const [searchResult, setSearchResult] = useState([]);
+  const {
+    searchBookResult,
+    searchUserResult,
+    searchAuthorsResult,
+    searchResults,
+    loading
+  } = useContext(HippoReadsContext);
   const [activeTab, setActiveTab] = useState("books");
 
   useEffect(() => {
-    setSearchResult({
-      books: books.filter((book) =>
-        book.name
-          .toLowerCase()
-          .includes(search.split("q=").join("").toLowerCase())
-      ),
-      users: users.filter((user) =>
-        user.name
-          .toLowerCase()
-          .includes(search.split("q=").join("").toLowerCase())
-      ),
-      authors: authors.filter((authors) =>
-        authors.name
-          .toLowerCase()
-          .includes(search.split("q=").join("").toLowerCase())
-      ),
-    });
-  }, []);
+    searchResults(search.split("q=").join(""));
+  }, [search, searchBookResult, searchUserResult, searchAuthorsResult]);
   return (
     <div className="pt-5">
+      <b>Search results for : {search.split("q=").join("")}</b>
       <div className=" d-flex mx-auto align-items-center mb-3">
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${activeTab == 'books' ? "text-primary" : ''}`}
+          className={`border fw-semibold text-center py-1 ${
+            activeTab === "books" ? "text-primary" : ""
+          }`}
           style={{ flex: 1 }}
           onClick={(e) => {
-            setActiveTab("books")
-            e.target.classList.add("text-primary")
-        }}
+            setActiveTab("books");
+            e.target.classList.add("text-primary");
+          }}
         >
-          Books
+          Books ({searchBookResult.length})
         </div>
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${activeTab == 'users' ? "text-primary" : ''}`}
+          className={`border fw-semibold text-center py-1 ${
+            activeTab === "users" ? "text-primary" : ""
+          }`}
           onClick={() => setActiveTab("users")}
           style={{ flex: 1 }}
         >
-          Users
+          Users ({searchUserResult.length})
         </div>
         <div
           role="button"
-          className={`border fw-semibold text-center py-1 ${activeTab == 'authors' ? "text-primary" : ''}`}
+          className={`border fw-semibold text-center py-1 ${
+            activeTab === "authors" ? "text-primary" : ""
+          }`}
           onClick={() => setActiveTab("authors")}
           style={{ flex: 1 }}
         >
-          Authors
+          Authors ({searchAuthorsResult.length})
         </div>
       </div>
       <div className="grid_autoFit">
         {activeTab == "users" && (
           <div>
-            {searchResult.users && searchResult.users.length ? (
-              searchResult.users.map((user) => <User key={user.id} user={user} />)
+            {searchUserResult.length ? (
+              searchUserResult.map((user) => <User key={user.id} user={user} />)
             ) : (
               <p>No User's name matched the search</p>
             )}
@@ -74,11 +70,11 @@ const Search = () => {
       </div>
       {activeTab == "authors" && (
         <div className="grid_autoFit">
-          {searchResult.authors && searchResult.authors.length ? (
-            searchResult.authors.map((author) => (
+          {searchAuthorsResult.length ? (
+            searchAuthorsResult.map((author) => (
               <Link
                 to={`/author/${author.name}`}
-                key={author.id} 
+                key={author.id}
                 className="text-decoration-none secondary-color-text"
               >
                 <div className="d-flex align-items-center gap-1 mb-1">
@@ -103,9 +99,9 @@ const Search = () => {
       )}
       {activeTab == "books" && (
         <div>
-          <Row> 
-            {searchResult.books && searchResult.books.length ? (
-              searchResult.books.map((book) => (
+          <Row>
+            {searchBookResult.length ? (
+              searchBookResult.map((book) => (
                 <Col lg={2} key={book.id}>
                   <BookCard book={book} />
                 </Col>

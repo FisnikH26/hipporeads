@@ -4,12 +4,12 @@ import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 import { Link } from "react-router-dom";
 
 const RecommendedBooks = () => {
-  const { books } = useContext(HippoReadsContext);
+  const { books,shuffle } = useContext(HippoReadsContext);
   return (
     <div>
       <h4 className="secondary-color-text">Recommended Books</h4>
       <div>
-        {books.slice(9, 13).map((book) => {
+        {shuffle(books).slice(0, 4).map((book) => {
           return (
             <div className="d-flex gap-2 mt-1 align-items-center" key={book.id}>
               <Link to={`/book/${book.id}`}>

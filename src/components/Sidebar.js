@@ -7,51 +7,24 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   const [userSuggestion, setUserSuggestion] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchBookResult, setSearchBookResult] = useState([]);
-  const [searchUserResult, setSearchUserResult] = useState([]);
-  const [searchAuthorsResult, setSearchAuthorsResult] = useState([]);
-  const { users, books, authors, loggedIn, DoIFollowThisUser, profile } =
+  
+  const { users,loggedIn, DoIFollowThisUser,shuffle, profile,searchBookResult,
+    searchUserResult,
+    searchAuthorsResult ,searchResults} =
     useContext(HippoReadsContext);
-
-  const searchResults = async () => {
-    let booksearched = books.filter((book) =>
-      book.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-    );
-    if (booksearched.length < 4) {
-      booksearched = [
-        ...booksearched,
-        ...books.filter((book) =>
-          book.name.toLowerCase().includes(searchTerm.toLowerCase())
-        ),
-      ];
-    }
-
-    setSearchBookResult([...new Set(booksearched)]);
-
-    setSearchUserResult(
-      users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-
-    setSearchAuthorsResult(
-      authors.filter((author) =>
-        author.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  };
+ 
 
   useEffect(() => {
     setUserSuggestion(
-      users.filter(
+      shuffle(users.filter(
         (user) =>
           user.id !== loggedIn.id && DoIFollowThisUser(user) == undefined
-      )
+      ))
     );
   }, []);
   useEffect(() => {
     if (searchTerm.length != 0) {
-      searchResults();
+      searchResults(searchTerm);
     }
   }, [searchTerm]);
   const handlesearch=(e)=>{
@@ -100,6 +73,7 @@ const Sidebar = () => {
               {searchAuthorsResult.slice(0, 4).map((author) => (
                 <Link
                   to={`/author/${author.name}`}
+                  key={author.id}
                   className="text-decoration-none secondary-color-text"
                 >
                   <div className="d-flex align-items-center gap-1 mb-1">
@@ -125,6 +99,7 @@ const Sidebar = () => {
                 return (
                   <Link
                     to={`/profile/@${user.username}`}
+                    key={user.id}
                     className="text-decoration-none secondary-color-text"
                   >
                     <div className="d-flex align-items-center gap-2 mb-1">

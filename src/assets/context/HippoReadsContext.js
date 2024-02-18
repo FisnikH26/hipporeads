@@ -135,6 +135,55 @@ export function HippoReadsContextProvider(props) {
     }
   };
 
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  } 
+  const [searchBookResult, setSearchBookResult] = useState([]);
+  const [searchUserResult, setSearchUserResult] = useState([]);
+  const [searchAuthorsResult, setSearchAuthorsResult] = useState([]);
+
+
+
+  const searchResults = async (searchTerm) => { 
+    let booksearched = books.filter((book) =>
+      book.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+    if (booksearched.length < 4) {
+      booksearched = [
+        ...booksearched,
+        ...books.filter((book) =>
+          book.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+      ];
+    }
+
+    setSearchBookResult([...new Set(booksearched)]);
+
+    setSearchUserResult(
+      users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+      let authorSearched = authors.filter((author) =>
+      author.name.toLowerCase().startsWith(searchTerm.toLowerCase()))
+      
+      if (authorSearched.length < 4) {
+        authorSearched = [
+          ...authorSearched,
+          ...authors.filter((authors) =>
+          authors.name.toLowerCase().includes(searchTerm.toLowerCase())
+          ),
+        ];
+      }
+    setSearchAuthorsResult([...new Set(authorSearched)]);
+ 
+  }; 
+
+
   useEffect(() => {
    
     if (users == undefined) {
@@ -171,8 +220,11 @@ export function HippoReadsContextProvider(props) {
     setBooks,
     authors,
     activePage,
-    setActivePage,
+    setActivePage,searchBookResult,
+    searchUserResult,
+    searchAuthorsResult,
     loggedIn,
+    searchResults,
     setLoggedIn,
     followUser,
     unFollowUser,
@@ -191,7 +243,8 @@ export function HippoReadsContextProvider(props) {
     profile, setProfile,
     users, setUsers,
     userFollowers, setUserFollowers,
-    theme, setTheme
+    theme, setTheme,
+    shuffle
   };
 
   return (

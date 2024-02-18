@@ -82,8 +82,7 @@
 }
 .theme-btn.active { 
   color: var(--secondary-color);
-  background: var(--main-color);
-  border:1px solid var(--secondary-color);
+  background: var(--main-color); 
   border-radius: 100px;
 }
 
