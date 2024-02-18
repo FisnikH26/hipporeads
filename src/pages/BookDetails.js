@@ -20,7 +20,8 @@ const BookDetails = () => {
     profile,
     booksRead,
     booksReading,
-    booksToBeRead
+    booksToBeRead,
+    useDocumentTitle
   } = useContext(HippoReadsContext);
   const [book, setBook] = useState();
   const [commentText, setCommentText] = useState("");
@@ -51,9 +52,11 @@ const BookDetails = () => {
     setBookComments([...bookComments, newComment]);
     setCommentText("");
   };
+    useDocumentTitle("Book - HippoReads")
 
   useEffect(() => {
     getBook();
+
   }, [id]);
 
   useEffect(() => {

@@ -1,6 +1,5 @@
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { createContext, useEffect, useState } from "react";
-import { v4 as id } from "uuid";
+import { useLocalStorage , useDocumentTitle} from "@uidotdev/usehooks";
+import { createContext, useEffect, useState } from "react"; 
 export const HippoReadsContext = createContext(null);
 
 export function HippoReadsContextProvider(props) {
@@ -253,6 +252,7 @@ export function HippoReadsContextProvider(props) {
     bookComments,
     setBookComments,
     profile,
+    useDocumentTitle,
     setProfile,
     users,
     setUsers,

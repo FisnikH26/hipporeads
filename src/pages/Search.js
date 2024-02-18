@@ -12,9 +12,10 @@ const Search = () => {
     searchUserResult,
     searchAuthorsResult,
     searchResults,
+    useDocumentTitle
   } = useContext(HippoReadsContext);
   const [activeTab, setActiveTab] = useState("books");
-
+  useDocumentTitle("Search for: " + search.split("q=").join("") + " - HippoReads")
   useEffect(() => {
       searchResults(search.split("q=").join(""));
   }, [search, searchBookResult, searchUserResult, searchAuthorsResult]);

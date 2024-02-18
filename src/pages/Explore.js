@@ -11,7 +11,8 @@ const Explore = () => {
   const [booksPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { setActivePage, books } = useContext(HippoReadsContext);
+  const { setActivePage, books,useDocumentTitle } = useContext(HippoReadsContext);
+  useDocumentTitle("Explore - HippoReads")
   useEffect(() => {
     setActivePage("Explore");
   });

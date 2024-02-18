@@ -10,6 +10,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("read");
   const [user, setUser] = useState();
   const [newName, setNewName] = useState("");
+  const [newUserName, setNewUserName] = useState("");
   const [newBio, setNewBio] = useState("");
   const [newProfileImage, setNewProfileImage] = useState("");
   const [editProfileDialog, setEditProfileDialog] = useState(false); 
@@ -34,7 +35,11 @@ const Profile = () => {
     unFollowUser,
     setBookComments,
     bookComments,
+    useDocumentTitle
   } = useContext(HippoReadsContext);
+
+  useDocumentTitle(`${username.split('@').join("")} - Profile - HippoReads`)
+
   const getProfileData = () => {
     //find user 
       let userData = users.find(
@@ -72,11 +77,15 @@ const Profile = () => {
       setUser(profileData); 
   };
   const deleteAccount = ()=>{
-    setUsers(users.filter(user=>user.id !== loggedIn.id))
-    setProfile(profile.filter(user=>user.userId !== loggedIn.id))
-    setBookComments(bookComments.map(u_comments=>u_comments.userId == loggedIn.id ? {...u_comments, userId: null} : u_comments))
-    setLoggedIn()
-    window.location.replace(`http://localhost:3000/`)
+    const deleteConfirm = window.confirm("Do you really want to delete your account")
+
+    if(deleteConfirm){
+      setUsers(users.filter(user=>user.id !== loggedIn.id))
+      setProfile(profile.filter(user=>user.userId !== loggedIn.id))
+      setBookComments(bookComments.map(u_comments=>u_comments.userId == loggedIn.id ? {...u_comments, userId: null} : u_comments))
+      setLoggedIn()
+      window.location.replace(`http://localhost:3000/`)
+    }
   }
   const btnType = () => {
     if (username.split("@").join("") == loggedIn.username) {
@@ -130,7 +139,7 @@ const Profile = () => {
     if (shelfname === "want to read") {
       setBooksToBeRead(
         booksToBeRead.filter(
-          (bookToBeRemoved) => bookToBeRemoved.id !== book.book.id
+          (bookToBeRemoved) => bookToBeRemoved.book.id !== book.book.id
         )
       );
       return;
@@ -172,14 +181,35 @@ const Profile = () => {
         )
       );
     }
-    if (user.name !== newName && newName !== "") {
+    
+    if(user.name !== newName && user.username !== newUserName){
       setUsers(
         users.map((user) =>
-          user.id === loggedIn.id ? { ...user, name: newName } : user
+          user.id === loggedIn.id ? { ...user,name: newName, username: newUserName } : user
+        )
+      );
+      window.location.replace(`http://localhost:3000/@${newUserName}`)
+      setLoggedIn({ ...loggedIn, name: newName.trim(),username: newUserName.trim() });
+    }else if (user.name !== newName && newName !== "") {
+      setUsers(
+        users.map((user) =>
+          user.id === loggedIn.id ? { ...user, name: newName.trim() } : user
         )
       );
       setLoggedIn({ ...loggedIn, name: newName });
+    }else if (user.username !== newUserName && newUserName !== "") {
+      setUsers(
+        users.map((user) =>
+          user.id === loggedIn.id ? { ...user, username: newUserName.trim() } : user
+        )
+      );
+      window.location.replace(`http://localhost:3000/@${newUserName}`)
+      setLoggedIn({ ...loggedIn,username: newUserName.trim() });
     }
+
+
+
+
     setTimeout(() => {
       setEditProfileDialog(false);
       
@@ -197,6 +227,7 @@ const Profile = () => {
       setNewName(user.name);
       setNewBio(user.biography);
       setNewProfileImage(user.profile_image);
+      setNewUserName(user.username);
     }
   }, [editProfileDialog]);
 
@@ -241,6 +272,19 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="form-floating mt-2">
+                    
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="user"
+                      placeholder="Username"
+                      value={newUserName}
+                      onChange={(e) => setNewUserName(e.target.value)}
+                    />
+                    <label htmlFor="name">Username</label>
+                        <small className="m-0 px-2 bg-white rounded ">http://localhost:3000/<b>@{newUserName}</b></small>
+                  </div>
+                  <div className="form-floating mt-2">
                     <input
                       type="text"
                       className="form-control"
@@ -267,6 +311,7 @@ const Profile = () => {
                       type="submit"
                       className={`btn btn-primary text-white w-50 form-control border-0 ${
                         newName == user.name &&
+                        newUserName == user.username &&
                         newBio == user.biography &&
                         newProfileImage == user.profile_image
                           ? " disabled"

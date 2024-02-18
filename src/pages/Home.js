@@ -6,9 +6,11 @@ import TopBooks from "../components/TopBooks";
 import Sidebar from "../components/Sidebar";
 import RecommendedBooks from "../components/RecommendedBooks";
 import { HippoReadsContext } from "../assets/context/HippoReadsContext";
+// import { useDocumentTitle } from "@uidotdev/usehooks"
 
 const Home = () => {
-  const { loading, setActivePage } = useContext(HippoReadsContext);
+  const { setActivePage,useDocumentTitle } = useContext(HippoReadsContext);
+  useDocumentTitle('Home - HippoReads')
   useEffect(() => {
     setActivePage("Home");
   });

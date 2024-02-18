@@ -121,15 +121,20 @@ const SignUp = () => {
                   {fullnameErr}
                 </b>
               )}
-            </div>
-            <div>
+            </div> 
+            <div  className="input-group mb-1">
+            <span class="input-group-text py-0" id="basic-addon1">@</span>
+
               <input
                 type="text"
-                className="form-control mb-1"
+                className="form-control pb-2"
                 placeholder="Username"
                 value={username}
+                aria-label="Username" 
+                aria-describedby="basic-addon1"
                 onChange={(e) => setUsername(e.target.value)}
-              />
+                />
+                
               {usernameErr.length !== 0 && (
                 <small>
 

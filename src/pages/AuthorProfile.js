@@ -11,7 +11,8 @@ const AuthorProfile = () => {
   const [authorBooks, setAuthorBooks] = useState();
 
   const { name } = useParams();
-  const { books, setLoading } = useContext(HippoReadsContext);
+  const { books, setLoading,useDocumentTitle  } = useContext(HippoReadsContext);
+  useDocumentTitle("Author - HippoReads")
 
   const getAuthor = async () => {
     setLoading(true);
