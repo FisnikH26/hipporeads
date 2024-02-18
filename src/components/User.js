@@ -20,12 +20,12 @@ useEffect(()=>{
       style={{ height: "40px" }}
     >
       <div
-        className="rounded-circle secondary-color-bg overflow-hidden "
+        className="rounded-circle border secondary-color-border main-color-bg overflow-hidden "
         style={{ width: "34px", height: "34px" }}
       >
-        <Image src={userProfile.profile_image || photo} width="100%" />
+        <Image src={userProfile.profile_image || photo} className="object-fit-cover w-100 h-100" alt={user.name + "'s profile image"}/>
       </div>
-      <Link to={`profile/${user.name.split(" ").join("-")}`} className="text-decoration-none secondary-color-text">
+      <Link to={`profile/@${user.username}`} className="text-decoration-none secondary-color-text">
         <div>
           <b>{user.name}</b>
         </div>

@@ -293,7 +293,7 @@ const Profile = () => {
                 }
                 width={150}
                 height={150}
-                className="rounded-circle"
+                className="rounded-circle border secondary-color-border main-color-bg object-fit-cover"
               />
               <div style={{ flex: 2 }}>
                 <h4 className="secondary-color-text">{user.name}</h4>
