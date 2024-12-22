@@ -17,7 +17,7 @@ const TopBooks = () => {
   };
 useEffect(()=>{
   getTopBooks()
-},[])
+})
   return (
     <section className="py-3">
       {loading ? (

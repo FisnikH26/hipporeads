@@ -5,23 +5,20 @@ import { HippoReadsContext } from "../assets/context/HippoReadsContext";
 const StackCarousel = () => {
   const { booksRead, booksReading, booksToBeRead, loggedIn } =
     useContext(HippoReadsContext);
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const [userbooksRead, setUserbooksRead] = useState([]);
-  const [userbooksReading, setUserbooksReading] = useState([]);
-  const [userbookswantToRead, setUserbookswantToRead] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(1); 
   const [myShelf, setMyShelf] = useState([]);
 
   useEffect(() => {
     setMyShelf({
-      read: booksRead.filter((book) => book.userId == loggedIn.id),
-      reading: booksReading.filter((book) => book.userId == loggedIn.id),
-      wantToRead: booksToBeRead.filter((book) => book.userId == loggedIn.id),
+      read: booksRead.filter((book) => book.userId === loggedIn.id),
+      reading: booksReading.filter((book) => book.userId === loggedIn.id),
+      wantToRead: booksToBeRead.filter((book) => book.userId === loggedIn.id),
       totalBooksInShelf:
-        booksRead.filter((book) => book.userId == loggedIn.id).length +
-        booksReading.filter((book) => book.userId == loggedIn.id).length +
-        booksToBeRead.filter((book) => book.userId == loggedIn.id).length,
+        booksRead.filter((book) => book.userId === loggedIn.id).length +
+        booksReading.filter((book) => book.userId === loggedIn.id).length +
+        booksToBeRead.filter((book) => book.userId === loggedIn.id).length,
     });
-  }, [booksRead, booksReading, booksToBeRead]);
+  }, [booksRead, booksReading, booksToBeRead,loggedIn.id]);
 
   function nextSlide() {
     let stackCarousel = document.querySelector("#stack-carousel");
@@ -108,7 +105,7 @@ const StackCarousel = () => {
               >
                 {myShelf.read && (
                   <div
-                    className={`piChart ${myShelf.totalBooksInShelf == 0 && "main-color-border border"}`}
+                    className={`piChart ${myShelf.totalBooksInShelf === 0 && "main-color-border border"}`}
                     style={{
                       background: `conic-gradient( 
                     #EC6B56 0deg ${

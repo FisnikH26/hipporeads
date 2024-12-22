@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import { todayDate } from "../assets/data/todaydate";
 import { v4 as commentId } from "uuid";
 import { Button, Col, Image, Row } from "react-bootstrap";
-import default_image from "../assets/images/OIG1.jpg"
 import Comment from "../components/Comment";
+import BookCard from "../components/BookCard";
 const BookDetails = () => {
   const { id } = useParams();
   const {
@@ -16,8 +16,8 @@ const BookDetails = () => {
     addBookToShelf,
     loggedIn,
     bookComments,
-    setBookComments,
-    profile,
+    setBookComments, 
+    books,
     booksRead,
     booksReading,
     booksToBeRead,
@@ -26,6 +26,7 @@ const BookDetails = () => {
   const [book, setBook] = useState();
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
+  const [BooksRec, setBooksRec] = useState([]);
 
   const getBook = async () => {
     setLoading(true);
@@ -39,8 +40,16 @@ const BookDetails = () => {
       setLoading(false);
       })
   };
+
+const recommentedBooks = ()=>{
+    books.forEach(element => {
+        for (let i = 0; i < element.genre.length; i++) {
+        setBooksRec(books.filter(booksF => (booksF?.genre.includes(book?.genre[i]) || books?.language === book?.language) && element.id !== id))
+        }
+      });
+    }
+
   const addComment = () => {
-    let userProfile = profile.find((user) => user.userId == loggedIn.id);
     let newComment = {
       id: commentId(),
       book: book.id,
@@ -60,11 +69,12 @@ const BookDetails = () => {
   }, [id]);
 
   useEffect(() => {
+    recommentedBooks()
     if (book) {
       setComments(
         bookComments.filter(
           (bookComment) =>
-            bookComment.book == book.id 
+            bookComment.book === book.id 
         )
       );
     }
@@ -80,16 +90,16 @@ const BookDetails = () => {
               <div className="d-flex flex-column gap-1 mt-3">
                 <Button className="read-btn text-white" variant="" onClick={() => addBookToShelf("read", book)}>
                   Read
-                  {booksRead.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
+                  {booksRead.find(bookread=> bookread.book.id === book.id && bookread.userId === loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
                 </Button>
                 <Button className="reading-btn text-white" variant="" onClick={() => addBookToShelf("reading", book)}>
                   Reading
-                  {booksReading.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
+                  {booksReading.find(bookread=> bookread.book.id === book.id && bookread.userId === loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
 
                 </Button>
                 <Button className="wanttoread-btn text-white" variant="" onClick={() => addBookToShelf("want to read", book)}>
                   Want to read
-                  {booksToBeRead.find(bookread=> bookread.book.id == book.id && bookread.userId == loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
+                  {booksToBeRead.find(bookread=> bookread.book.id === book.id && bookread.userId === loggedIn.id) && <i className="fa-solid fa-circle-check ms-1"></i>}
 
                 </Button>
               </div>
@@ -157,6 +167,16 @@ const BookDetails = () => {
               </div>
             </Col>
           </Row>
+          <div>
+            <Row>
+            {BooksRec.length !== 0 && BooksRec.slice(0,5).map(book=>(
+              <Col lg={2}>
+                <BookCard book={book} />
+              </Col>
+            ))}          
+          </Row>
+
+          </div>
           <div className="comment mt-5">
             <div className="border-bottom border-2 border-black">
               <h4 className="secondary-color-bg pb-1 px-3 m-0 d-inline-block rounded-top main-color-text">

@@ -138,12 +138,12 @@ const SignUp = () => {
               {usernameErr.length !== 0 && (
                 <small>
 
-                <b className="m-0 py-0 px-1 rounded bg-danger text-white">
-                  {usernameErr}
-                </b>
                 </small>
               )}
             </div>
+                <b className="m-0  py-0 px-1 rounded bg-danger text-white">
+                  {usernameErr}
+                </b>
             <div>
               <input
                 type="email"

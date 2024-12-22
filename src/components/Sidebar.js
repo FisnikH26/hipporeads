@@ -18,19 +18,19 @@ const Sidebar = () => {
     setUserSuggestion(
       shuffle(users.filter(
         (user) =>
-          user.id !== loggedIn.id && DoIFollowThisUser(user) == undefined
+          user.id  !==  loggedIn.id && DoIFollowThisUser(user) === undefined
       ))
     );
   }, []);
   useEffect(() => {
-    if (searchTerm.length != 0) {
+    if (searchTerm.length  !==  0) {
       searchResults(searchTerm);
     }
   }, [searchTerm]);
   const handlesearch=(e)=>{
     e.preventDefault();
     
-    if(searchTerm != "")
+    if(searchTerm  !==  "")
     {
       window.location.replace(`http://localhost:3000/search/q=${searchTerm}`)
     }
@@ -47,7 +47,7 @@ const Sidebar = () => {
             onKeyUp={(e) => setSearchTerm(e.target.value)}
           />
         </form>
-        {searchTerm.length != 0 && (
+        {searchTerm.length  !==  0 && (
           <div className="search_result position-absolute bg-white w-100 p-2 text-secondary border">
             <div>
             <small className="fw-bold">BOOKS</small>
@@ -78,7 +78,7 @@ const Sidebar = () => {
                 >
                   <div className="d-flex align-items-center gap-1 mb-1">
                     <Image
-                      src={author.image == null ? default_photo : author.image}
+                      src={author.image === null ? default_photo : author.image}
                       width={40}
                       height={40}
                       className="rounded-circle"
@@ -95,7 +95,7 @@ const Sidebar = () => {
             <div>
               <small className="fw-bold">USERS</small>
               {searchUserResult.slice(0, 4).map((user) => {
-                let userP = profile.find((up) => up.userId == user.id);
+                let userP = profile.find((up) => up.userId === user.id);
                 return (
                   <Link
                     to={`/@${user.username}`}

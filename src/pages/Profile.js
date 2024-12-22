@@ -41,28 +41,28 @@ const Profile = () => {
   useDocumentTitle(`${username.split('@').join("")} - Profile - HippoReads`)
 
   const getProfileData = () => {
-    //find user 
+      //find user 
       let userData = users.find(
-        (user) => user.username == username.split("@").join("")
+        (user) => user.username === username.split("@").join("")
       );
       //find profile
-      let userProfileData = profile.find((user) => userData.id == user.userId);
+      let userProfileData = profile.find((user) => userData.id === user.userId);
       //followers and following
       let userFollowing = userFollowers.filter(
-        (user) => user.userId == userData.id
+        (user) => user.userId === userData.id
       );
       let userFollower = userFollowers.filter(
-        (user) => user.followerId == userData.id
+        (user) => user.followerId === userData.id
       );
       //find book in the shelf
       let userBooksRead = booksRead.filter(
-        (user) => user.userId == userData.id
+        (user) => user.userId === userData.id
       );
       let userBooksReading = booksReading.filter(
-        (user) => user.userId == userData.id
+        (user) => user.userId === userData.id
       );
       let userBooksToBeRead = booksToBeRead.filter(
-        (user) => user.userId == userData.id
+        (user) => user.userId === userData.id
       );
       let profileData = {
         ...userData,
@@ -82,13 +82,13 @@ const Profile = () => {
     if(deleteConfirm){
       setUsers(users.filter(user=>user.id !== loggedIn.id))
       setProfile(profile.filter(user=>user.userId !== loggedIn.id))
-      setBookComments(bookComments.map(u_comments=>u_comments.userId == loggedIn.id ? {...u_comments, userId: null} : u_comments))
+      setBookComments(bookComments.map(u_comments=>u_comments.userId === loggedIn.id ? {...u_comments, userId: null} : u_comments))
       setLoggedIn()
       window.location.replace(`http://localhost:3000/`)
     }
   }
   const btnType = () => {
-    if (username.split("@").join("") == loggedIn.username) {
+    if (username.split("@").join("") === loggedIn.username) {
       return (
         <>
           <Button variant="dark" className="btn-sm me-2" onClick={() => setEditProfileDialog(true)}>
@@ -100,7 +100,7 @@ const Profile = () => {
         </>
       );
     }
-    if (DoIFollowThisUser(user) == undefined) {
+    if (DoIFollowThisUser(user) === undefined) {
       return (
         <Button
           className="follow-btn btn-sm"
@@ -253,7 +253,7 @@ const Profile = () => {
                     >
                       <Image
                         src={
-                          newProfileImage == null
+                          newProfileImage === null
                             ? default_img
                             : newProfileImage
                         }
@@ -310,10 +310,10 @@ const Profile = () => {
                     <input
                       type="submit"
                       className={`btn btn-primary text-white w-50 form-control border-0 ${
-                        newName == user.name &&
-                        newUserName == user.username &&
-                        newBio == user.biography &&
-                        newProfileImage == user.profile_image
+                        newName === user.name &&
+                        newUserName === user.username &&
+                        newBio === user.biography &&
+                        newProfileImage === user.profile_image
                           ? " disabled"
                           : ""
                       }`}
@@ -334,7 +334,7 @@ const Profile = () => {
             <div className="d-flex align-items-center gap-3 w-75 justify-content-between">
               <Image
                 src={
-                  user.profile_image == null ? default_img : user.profile_image
+                  user.profile_image === null ? default_img : user.profile_image
                 }
                 width={150}
                 height={150}
@@ -378,14 +378,14 @@ const Profile = () => {
                 Want to read ({user.booksToBeRead.length})
               </div>
             </div>
-            {activeTab == "read" && (
+            {activeTab === "read" && (
               <div>
                 {user.bookRead.length ? (
                   <Row>
                     {user.bookRead.map((book) => (
                       <Col lg={3} key={book.book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        {username.split("@").join("") == loggedIn.username && (
+                        {username.split("@").join("") === loggedIn.username && (
                           <Button
                             variant="danger"
                             className="btn-sm rounded-0 rounded-start position-absolute"
@@ -408,14 +408,14 @@ const Profile = () => {
                 )}
               </div>
             )}
-            {activeTab == "reading" && (
+            {activeTab === "reading" && (
               <div>
                 {user.bookReading.length ? (
                   <Row>
                     {user.bookReading.map((book) => (
                       <Col lg={3} key={book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        {username.split("@").join("") == loggedIn.username && (
+                        {username.split("@").join("") === loggedIn.username && (
                           <Button
                             variant="danger"
                             className="btn-sm rounded-0 rounded-start position-absolute"
@@ -438,14 +438,14 @@ const Profile = () => {
                 )}
               </div>
             )}
-            {activeTab == "wantToRead" && (
+            {activeTab === "wantToRead" && (
               <div>
                 {user.booksToBeRead.length ? (
                   <Row>
                     {user.booksToBeRead.map((book) => (
                       <Col lg={3} key={book.id} className="position-relative">
                         <BookCard book={book.book} />
-                        {username.split("@").join("") == loggedIn.username && (
+                        {username.split("@").join("") === loggedIn.username && (
                           <Button
                             variant="danger"
                             className="btn-sm rounded-0 rounded-start position-absolute"
